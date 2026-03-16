@@ -10,9 +10,20 @@ import Tools from "./pages/Tools";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
 import CGPACalculator from "./tools/CGPACalculator";
+import SGPACalculator from "./tools/SGPACalculator";
+import PercentageCalculator from "./tools/PercentageCalculator";
+import GradeCalculator from "./tools/GradeCalculator";
 import WordCounter from "./tools/WordCounter";
+import TextSummarizer from "./tools/TextSummarizer";
+import EssayTitleGenerator from "./tools/EssayTitleGenerator";
+import StudyTimer from "./tools/StudyTimer";
 import PasswordGenerator from "./tools/PasswordGenerator";
-import ComingSoonTool from "./tools/ComingSoonTool";
+import UnitConverter from "./tools/UnitConverter";
+import JSONFormatter from "./tools/JSONFormatter";
+import CodeFormatter from "./tools/CodeFormatter";
+import Base64Tool from "./tools/Base64Tool";
+import ImageToPDF from "./tools/ImageToPDF";
+import PDFMerger from "./tools/PDFMerger";
 
 const queryClient = new QueryClient();
 
@@ -28,20 +39,20 @@ const App = () => (
           <Route path="/tools" element={<Tools />} />
           <Route path="/about" element={<About />} />
           <Route path="/tool/cgpa-calculator" element={<CGPACalculator />} />
+          <Route path="/tool/sgpa-calculator" element={<SGPACalculator />} />
+          <Route path="/tool/percentage-calculator" element={<PercentageCalculator />} />
+          <Route path="/tool/grade-calculator" element={<GradeCalculator />} />
           <Route path="/tool/word-counter" element={<WordCounter />} />
+          <Route path="/tool/text-summarizer" element={<TextSummarizer />} />
+          <Route path="/tool/essay-title-generator" element={<EssayTitleGenerator />} />
+          <Route path="/tool/study-timer" element={<StudyTimer />} />
           <Route path="/tool/password-generator" element={<PasswordGenerator />} />
-          <Route path="/tool/sgpa-calculator" element={<ComingSoonTool title="SGPA Calculator" />} />
-          <Route path="/tool/percentage-calculator" element={<ComingSoonTool title="Percentage Calculator" />} />
-          <Route path="/tool/grade-calculator" element={<ComingSoonTool title="Grade Calculator" />} />
-          <Route path="/tool/text-summarizer" element={<ComingSoonTool title="Text Summarizer" />} />
-          <Route path="/tool/essay-title-generator" element={<ComingSoonTool title="Essay Title Generator" />} />
-          <Route path="/tool/study-timer" element={<ComingSoonTool title="Study Timer" />} />
-          <Route path="/tool/unit-converter" element={<ComingSoonTool title="Unit Converter" />} />
-          <Route path="/tool/json-formatter" element={<ComingSoonTool title="JSON Formatter" />} />
-          <Route path="/tool/code-formatter" element={<ComingSoonTool title="Code Formatter" />} />
-          <Route path="/tool/base64" element={<ComingSoonTool title="Base64 Encoder / Decoder" />} />
-          <Route path="/tool/image-to-pdf" element={<ComingSoonTool title="Image to PDF Converter" />} />
-          <Route path="/tool/pdf-merger" element={<ComingSoonTool title="PDF Merger" />} />
+          <Route path="/tool/unit-converter" element={<UnitConverter />} />
+          <Route path="/tool/json-formatter" element={<JSONFormatter />} />
+          <Route path="/tool/code-formatter" element={<CodeFormatter />} />
+          <Route path="/tool/base64" element={<Base64Tool />} />
+          <Route path="/tool/image-to-pdf" element={<ImageToPDF />} />
+          <Route path="/tool/pdf-merger" element={<PDFMerger />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />

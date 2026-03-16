@@ -11,8 +11,9 @@ interface ToolLayoutProps {
 
 const ToolLayout = ({ title, children }: ToolLayoutProps) => {
   return (
-    <div className="pt-24 pb-16 min-h-screen bg-background-alt">
-      <div className="container mx-auto px-4 lg:px-8 max-w-2xl">
+    <div className="pt-24 pb-16 min-h-screen relative">
+      <div className="absolute inset-0 bg-gradient-radial opacity-30 pointer-events-none" />
+      <div className="container mx-auto px-4 lg:px-8 max-w-2xl relative z-10">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
           <Button asChild variant="ghost" size="sm" className="mb-6 text-muted-foreground">
             <Link to="/tools">
@@ -21,7 +22,7 @@ const ToolLayout = ({ title, children }: ToolLayoutProps) => {
             </Link>
           </Button>
 
-          <h1 className="font-display font-bold text-3xl text-foreground mb-8">{title}</h1>
+          <h1 className="font-display font-bold text-3xl text-gradient mb-8">{title}</h1>
 
           <div className="bg-card border border-border rounded-xl p-6 sm:p-8 card-shadow">
             {children}
