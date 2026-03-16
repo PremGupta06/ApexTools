@@ -8,8 +8,13 @@ const Spline = lazy(() => import("@splinetool/react-spline"));
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center pt-16 overflow-hidden bg-gradient-to-br from-background via-background to-background-alt">
-      <div className="container mx-auto px-4 lg:px-8">
+    <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
+      {/* Background effects */}
+      <div className="absolute inset-0 bg-gradient-radial" />
+      <div className="absolute top-1/3 left-1/4 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] pointer-events-none animate-pulse-glow" />
+      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-cyan/8 rounded-full blur-[100px] pointer-events-none animate-pulse-glow" style={{ animationDelay: "1.5s" }} />
+
+      <div className="container mx-auto px-4 lg:px-8 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left */}
           <motion.div
@@ -22,13 +27,13 @@ const Hero = () => {
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-medium w-fit"
+              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border-glow bg-primary/10 text-primary text-xs font-medium w-fit"
             >
               <Sparkles className="h-3.5 w-3.5" />
               Free for all students
             </motion.div>
 
-            <h1 className="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl leading-[1.1] tracking-tight text-foreground">
+            <h1 className="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl leading-[1.1] tracking-tight">
               All Student Tools{" "}
               <span className="text-gradient">in One Place</span>
             </h1>
@@ -38,13 +43,13 @@ const Hero = () => {
             </p>
 
             <div className="flex flex-wrap gap-3 pt-2">
-              <Button asChild size="lg" className="group font-medium">
+              <Button asChild size="lg" className="group font-medium glow-primary">
                 <Link to="/tools">
                   Explore Tools
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="font-medium">
+              <Button asChild variant="outline" size="lg" className="font-medium border-glow">
                 <Link to="/about">Learn More</Link>
               </Button>
             </div>
@@ -69,9 +74,6 @@ const Hero = () => {
           </motion.div>
         </div>
       </div>
-
-      {/* Subtle gradient orb */}
-      <div className="absolute top-1/4 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl pointer-events-none" />
     </section>
   );
 };
