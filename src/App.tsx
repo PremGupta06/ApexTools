@@ -9,21 +9,19 @@ import Index from "./pages/Index";
 import Tools from "./pages/Tools";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
-import CGPACalculator from "./tools/CGPACalculator";
-import SGPACalculator from "./tools/SGPACalculator";
 import PercentageCalculator from "./tools/PercentageCalculator";
-import GradeCalculator from "./tools/GradeCalculator";
 import WordCounter from "./tools/WordCounter";
 import TextSummarizer from "./tools/TextSummarizer";
-import EssayTitleGenerator from "./tools/EssayTitleGenerator";
 import StudyTimer from "./tools/StudyTimer";
 import PasswordGenerator from "./tools/PasswordGenerator";
 import UnitConverter from "./tools/UnitConverter";
 import JSONFormatter from "./tools/JSONFormatter";
-import CodeFormatter from "./tools/CodeFormatter";
 import Base64Tool from "./tools/Base64Tool";
 import ImageToPDF from "./tools/ImageToPDF";
 import PDFMerger from "./tools/PDFMerger";
+import SmartStudyPlanner from "./tools/SmartStudyPlanner";
+import ExamPanicMode from "./tools/ExamPanicMode";
+import StudyDashboard from "./tools/StudyDashboard";
 
 const queryClient = new QueryClient();
 
@@ -38,21 +36,19 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/about" element={<About />} />
-          <Route path="/tool/cgpa-calculator" element={<CGPACalculator />} />
-          <Route path="/tool/sgpa-calculator" element={<SGPACalculator />} />
           <Route path="/tool/percentage-calculator" element={<PercentageCalculator />} />
-          <Route path="/tool/grade-calculator" element={<GradeCalculator />} />
           <Route path="/tool/word-counter" element={<WordCounter />} />
           <Route path="/tool/text-summarizer" element={<TextSummarizer />} />
-          <Route path="/tool/essay-title-generator" element={<EssayTitleGenerator />} />
           <Route path="/tool/study-timer" element={<StudyTimer />} />
           <Route path="/tool/password-generator" element={<PasswordGenerator />} />
           <Route path="/tool/unit-converter" element={<UnitConverter />} />
           <Route path="/tool/json-formatter" element={<JSONFormatter />} />
-          <Route path="/tool/code-formatter" element={<CodeFormatter />} />
           <Route path="/tool/base64" element={<Base64Tool />} />
           <Route path="/tool/image-to-pdf" element={<ImageToPDF />} />
           <Route path="/tool/pdf-merger" element={<PDFMerger />} />
+          <Route path="/tool/smart-study-planner" element={<SmartStudyPlanner />} />
+          <Route path="/tool/exam-panic-mode" element={<ExamPanicMode />} />
+          <Route path="/tool/study-dashboard" element={<StudyDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
