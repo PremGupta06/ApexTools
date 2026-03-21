@@ -49,7 +49,7 @@ const About = () => {
           className="text-center mb-20"
         >
           <h1 className="font-bold text-4xl sm:text-5xl mb-6 tracking-wide">
-            About <span className="text-gradient-f1">Student Tools Hub</span>
+            About <span className="text-gradient-f1">Apextools</span>
           </h1>
 
           <p className="text-muted-foreground text-lg leading-relaxed max-w-xl mx-auto">
