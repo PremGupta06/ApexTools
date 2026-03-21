@@ -12,40 +12,57 @@ const Index = () => {
     <>
       <Hero />
 
-      {/* Popular Tools */}
-      <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-radial opacity-30" />
-        <div className="container mx-auto px-4 lg:px-8 relative z-10">
+      {/* 🔥 POPULAR TOOLS */}
+      <section className="py-28 relative overflow-hidden">
+
+        {/* 🌌 BACKGROUND GLOW */}
+        <div className="absolute inset-0 bg-f1-glow opacity-50" />
+
+        {/* 🔴 LEFT GLOW */}
+        <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-red-500/20 blur-[120px] rounded-full" />
+
+        {/* 🔵 RIGHT GLOW */}
+        <div className="absolute bottom-0 right-0 w-[350px] h-[350px] bg-cyan-400/20 blur-[120px] rounded-full" />
+
+        <div className="container mx-auto px-4 lg:px-10 relative z-10">
+
+          {/* HEADER */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-20"
           >
-            <h2 className="font-display font-bold text-3xl sm:text-4xl mb-4">
-              Popular <span className="text-gradient">Tools</span>
+            <h2 className="font-bold text-3xl sm:text-5xl mb-6 tracking-wide">
+              Popular <span className="text-gradient-f1">Tools</span>
             </h2>
-            <p className="text-muted-foreground max-w-md mx-auto">
-              Explore our most-used student productivity tools.
+
+            <p className="text-muted-foreground max-w-lg mx-auto text-base">
+              Your racing dashboard of productivity tools — fast, clean, and powerful.
             </p>
           </motion.div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {/* TOOLS GRID */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             {toolsList.slice(0, 8).map((tool, i) => (
               <ToolCard key={tool.title} {...tool} index={i} />
             ))}
           </div>
 
+          {/* BUTTON */}
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
-            className="text-center mt-12"
+            className="text-center mt-14"
           >
-            <Button asChild variant="outline" className="group border-glow">
-              <Link to="/tools">
+            <Button
+              asChild
+              className="btn-f1 font-semibold px-6 py-3 rounded-xl"
+            >
+              <Link to="/tools" className="flex items-center gap-2">
                 View All Tools
-                <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
           </motion.div>
@@ -54,23 +71,36 @@ const Index = () => {
 
       <Features />
 
-      {/* About snippet */}
-      <section className="py-24 relative">
-        <div className="container mx-auto px-4 lg:px-8 max-w-3xl text-center">
+      {/* 🏎️ ABOUT SNIPPET */}
+      <section className="py-28 relative overflow-hidden">
+
+        {/* 🌌 GLOW */}
+        <div className="absolute inset-0 bg-f1-glow opacity-40" />
+
+        <div className="container mx-auto px-4 lg:px-10 max-w-3xl text-center relative z-10">
+
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="font-display font-bold text-3xl sm:text-4xl mb-6">
-              Built for <span className="text-gradient-warm">Students</span>
+
+            <h2 className="font-bold text-3xl sm:text-5xl mb-6 tracking-wide">
+              Built for <span className="text-gradient-f1">Students</span>
             </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed mb-8">
-              Student Tools Hub is designed to help students quickly access useful academic tools without installing software or searching multiple websites.
+
+            <p className="text-muted-foreground text-lg leading-relaxed mb-10">
+              Designed like a racing machine — fast, responsive, and distraction-free.
+              Access all your academic tools in one place.
             </p>
-            <Button asChild className="glow-primary">
+
+            <Button
+              asChild
+              className="btn-f1 px-6 py-3 rounded-xl font-semibold"
+            >
               <Link to="/about">Learn More About Us</Link>
             </Button>
+
           </motion.div>
         </div>
       </section>

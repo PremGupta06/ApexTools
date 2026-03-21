@@ -8,6 +8,11 @@ import Footer from "@/components/Footer";
 import Index from "./pages/Index";
 import Tools from "./pages/Tools";
 import About from "./pages/About";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsPage from "./pages/TermsPage";
+import ContactPage from "./pages/ContactPage";
+import BlogPage from "./pages/BlogPage";
+import BlogPost from "./pages/BlogPost";
 import NotFound from "./pages/NotFound";
 import PercentageCalculator from "./tools/PercentageCalculator";
 import WordCounter from "./tools/WordCounter";
@@ -22,6 +27,7 @@ import PDFMerger from "./tools/PDFMerger";
 import SmartStudyPlanner from "./tools/SmartStudyPlanner";
 import ExamPanicMode from "./tools/ExamPanicMode";
 import StudyDashboard from "./tools/StudyDashboard";
+
 
 const queryClient = new QueryClient();
 
@@ -50,6 +56,11 @@ const App = () => (
           <Route path="/tool/exam-panic-mode" element={<ExamPanicMode />} />
           <Route path="/tool/study-dashboard" element={<StudyDashboard />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
         </Routes>
         <Footer />
       </BrowserRouter>

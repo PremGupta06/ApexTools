@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Plus, Trash2, CalendarClock, CheckCircle2, RotateCcw, BookOpen } from "lucide-react";
+import { toast } from "sonner";
 
 interface DayPlan {
   day: number;
@@ -25,41 +26,84 @@ const SmartStudyPlanner = () => {
   const removeSubject = (i: number) => setSubjects(subjects.filter((_, idx) => idx !== i));
 
   const generate = () => {
-    const validSubjects = subjects.filter((s) => s.name.trim());
-    if (!validSubjects.length || !examDate || !dailyHours) return;
+    const valid = subjects.filter((s) => s.name.trim());
+
+    if (!valid.length) {
+      toast.error("Add at least one subject");
+      return;
+    }
+    if (!examDate) {
+      toast.error("Select exam date");
+      return;
+    }
 
     const today = new Date();
     const exam = new Date(examDate);
-    const daysLeft = Math.max(1, Math.ceil((exam.getTime() - today.getTime()) / 86400000));
+
+    const diff = Math.ceil((exam.setHours(0,0,0,0) - today.setHours(0,0,0,0)) / 86400000);
+    const daysLeft = Math.max(1, diff);
+
     const hours = parseFloat(dailyHours);
+    if (isNaN(hours) || hours <= 0) {
+      toast.error("Enter valid daily hours");
+      return;
+    }
+
+    // PRIORITY SORT
+    const order = { high: 0, medium: 1, low: 2 };
+    const sorted = [...valid].sort(
+      (a, b) =>
+        order[a.priority as keyof typeof order] -
+        order[b.priority as keyof typeof order]
+    );
 
     const schedule: DayPlan[] = [];
+
     for (let d = 0; d < daysLeft; d++) {
       const date = new Date(today);
       date.setDate(date.getDate() + d);
-      const daySubjects: { name: string; hours: number }[] = [];
 
-      // Distribute subjects across days with rotation
-      const subjectsPerDay = Math.min(3, validSubjects.length);
-      const startIdx = d % validSubjects.length;
-      let remainingHours = hours;
+      let remaining = hours;
+      const subjectsToday: { name: string; hours: number }[] = [];
 
-      for (let s = 0; s < subjectsPerDay && remainingHours > 0; s++) {
-        const subIdx = (startIdx + s) % validSubjects.length;
-        const allocated = s === subjectsPerDay - 1 ? remainingHours : Math.round((hours / subjectsPerDay) * 10) / 10;
-        daySubjects.push({ name: validSubjects[subIdx].name, hours: Math.min(allocated, remainingHours) });
-        remainingHours -= allocated;
+      const perDay = Math.min(3, sorted.length);
+      const startIdx = d % sorted.length;
+
+      for (let i = 0; i < perDay && remaining > 0; i++) {
+        const idx = (startIdx + i) % sorted.length;
+
+        const base =
+          sorted[idx].priority === "high"
+            ? 2.5
+            : sorted[idx].priority === "medium"
+            ? 2
+            : 1.5;
+
+        const allocated = Math.min(base, remaining);
+
+        subjectsToday.push({
+          name: sorted[idx].name,
+          hours: allocated,
+        });
+
+        remaining -= allocated;
       }
 
       schedule.push({
         day: d + 1,
-        date: date.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }),
-        subjects: daySubjects,
+        date: date.toLocaleDateString("en-US", {
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+        }),
+        subjects: subjectsToday,
         isRecovery: d > 0 && d % 7 === 6,
       });
     }
+
     setPlan(schedule);
     setCompletedDays(new Set());
+    toast.success("Study plan generated!");
   };
 
   const toggleDay = (day: number) => {
@@ -68,147 +112,127 @@ const SmartStudyPlanner = () => {
     setCompletedDays(next);
   };
 
-  const progress = plan ? Math.round((completedDays.size / plan.length) * 100) : 0;
-  const missedDays = plan ? plan.filter((d) => !completedDays.has(d.day) && d.day < (plan.findIndex((p) => !completedDays.has(p.day)) + 1 || plan.length)).length : 0;
+  const reset = () => {
+    setPlan(null);
+    setSubjects([{ name: "", priority: "medium" }]);
+    setExamDate("");
+    setCompletedDays(new Set());
+  };
+
+  const progress = plan
+    ? Math.round((completedDays.size / plan.length) * 100)
+    : 0;
 
   return (
     <ToolLayout title="Smart Study Planner">
+
       <div className="space-y-6">
-        {/* Input Section */}
+
+        {/* INPUT */}
         <div className="space-y-4">
-          <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wider">
+
+          <div className="text-sm text-muted-foreground flex items-center gap-2">
             <CalendarClock className="h-4 w-4" /> Setup
           </div>
 
+          {/* SUBJECTS */}
           <div>
-            <Label className="text-xs text-muted-foreground mb-1.5 block">Subjects</Label>
-            <div className="space-y-2">
-              {subjects.map((sub, i) => (
-                <div key={i} className="flex gap-2 items-center">
-                  <Input
-                    placeholder={`Subject ${i + 1}`}
-                    value={sub.name}
-                    onChange={(e) => {
-                      const u = [...subjects];
-                      u[i].name = e.target.value;
-                      setSubjects(u);
-                    }}
-                    className="flex-1"
-                  />
-                  <select
-                    value={sub.priority}
-                    onChange={(e) => {
-                      const u = [...subjects];
-                      u[i].priority = e.target.value;
-                      setSubjects(u);
-                    }}
-                    className="h-10 rounded-md border border-input bg-background px-3 text-sm"
-                  >
-                    <option value="high">High</option>
-                    <option value="medium">Medium</option>
-                    <option value="low">Low</option>
-                  </select>
-                  {subjects.length > 1 && (
-                    <Button variant="ghost" size="icon" onClick={() => removeSubject(i)}>
-                      <Trash2 className="h-4 w-4 text-muted-foreground" />
-                    </Button>
-                  )}
-                </div>
-              ))}
-              <Button variant="outline" size="sm" onClick={addSubject} className="w-full">
-                <Plus className="mr-2 h-4 w-4" /> Add Subject
-              </Button>
-            </div>
+            <Label className="text-xs mb-2 block">Subjects</Label>
+
+            {subjects.map((sub, i) => (
+              <div key={i} className="flex gap-2 mb-2">
+                <Input
+                  value={sub.name}
+                  placeholder="Subject"
+                  onChange={(e) => {
+                    const u = [...subjects];
+                    u[i].name = e.target.value;
+                    setSubjects(u);
+                  }}
+                  className="bg-black/40 border-white/10 text-white"
+                />
+
+                <select
+                  value={sub.priority}
+                  onChange={(e) => {
+                    const u = [...subjects];
+                    u[i].priority = e.target.value;
+                    setSubjects(u);
+                  }}
+                  className="bg-black/40 border border-white/10 text-white px-2 rounded-md"
+                >
+                  <option value="high">High</option>
+                  <option value="medium">Medium</option>
+                  <option value="low">Low</option>
+                </select>
+
+                {subjects.length > 1 && (
+                  <Button variant="ghost" onClick={() => removeSubject(i)}>
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+            ))}
+
+            <Button onClick={addSubject} variant="outline" className="w-full">
+              <Plus className="mr-2 h-4 w-4" /> Add Subject
+            </Button>
           </div>
 
+          {/* DATE + HOURS */}
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label className="text-xs text-muted-foreground mb-1.5 block">Exam Date</Label>
-              <Input type="date" value={examDate} onChange={(e) => setExamDate(e.target.value)} />
-            </div>
-            <div>
-              <Label className="text-xs text-muted-foreground mb-1.5 block">Daily Study Hours</Label>
-              <Input type="number" min="1" max="16" value={dailyHours} onChange={(e) => setDailyHours(e.target.value)} />
-            </div>
+            <Input type="date" value={examDate} onChange={(e) => setExamDate(e.target.value)} className="bg-black/40 border-white/10 text-white" />
+            <Input type="number" value={dailyHours} onChange={(e) => setDailyHours(e.target.value)} className="bg-black/40 border-white/10 text-white" />
           </div>
 
-          <Button onClick={generate} className="w-full" disabled={!subjects.some((s) => s.name.trim()) || !examDate}>
-            <CalendarClock className="mr-2 h-4 w-4" /> Generate Study Plan
-          </Button>
+          {/* BUTTONS */}
+          <div className="flex gap-3">
+            <Button onClick={generate} className="flex-1 btn-f1">
+              Generate Plan
+            </Button>
+
+            <Button onClick={reset} variant="ghost" className="border border-white/10">
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
 
-        {/* Results Section */}
+        {/* RESULTS */}
         <AnimatePresence>
           {plan && (
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              className="space-y-5"
-            >
-              {/* Progress Bar */}
-              <div className="p-4 rounded-xl bg-secondary/50 border border-border space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Progress</span>
-                  <span className="font-medium text-foreground">{completedDays.size}/{plan.length} days</span>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-4">
+
+              {/* PROGRESS */}
+              <div className="p-4 rounded-xl bg-black/40 border border-white/10">
+                <div className="flex justify-between text-sm mb-2">
+                  <span>Progress</span>
+                  <span>{completedDays.size}/{plan.length}</span>
                 </div>
-                <Progress value={progress} className="h-2" />
-                {missedDays > 0 && (
-                  <div className="flex items-center gap-2 text-xs text-amber-400">
-                    <RotateCcw className="h-3 w-3" />
-                    {missedDays} missed day(s) — recovery hours added to upcoming days
-                  </div>
-                )}
+                <Progress value={progress} />
               </div>
 
-              {/* Schedule */}
-              <div className="space-y-2">
-                {plan.slice(0, 14).map((day) => (
-                  <motion.div
-                    key={day.day}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: day.day * 0.03 }}
-                    onClick={() => toggleDay(day.day)}
-                    className={`flex items-center gap-4 p-3.5 rounded-lg border cursor-pointer transition-all duration-200 ${
-                      completedDays.has(day.day)
-                        ? "bg-emerald-500/10 border-emerald-500/25"
-                        : day.isRecovery
-                        ? "bg-amber-500/5 border-amber-500/15"
-                        : "bg-card border-border hover:border-primary/30"
-                    }`}
-                  >
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-medium shrink-0 ${
-                      completedDays.has(day.day)
-                        ? "bg-emerald-500/20 text-emerald-400"
-                        : "bg-secondary text-muted-foreground"
-                    }`}>
-                      {completedDays.has(day.day) ? <CheckCircle2 className="h-4 w-4" /> : day.day}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-foreground">{day.date}</span>
-                        {day.isRecovery && (
-                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-400">Light Day</span>
-                        )}
-                      </div>
-                      <div className="flex gap-2 mt-1 flex-wrap">
-                        {day.subjects.map((s, j) => (
-                          <span key={j} className="text-xs text-muted-foreground">
-                            <BookOpen className="h-3 w-3 inline mr-1" />
-                            {s.name} ({s.hours}h)
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-                {plan.length > 14 && (
-                  <p className="text-xs text-center text-muted-foreground pt-2">
-                    + {plan.length - 14} more days in your plan
-                  </p>
-                )}
-              </div>
+              {/* DAYS */}
+              {plan.slice(0, 14).map((day) => (
+                <div
+                  key={day.day}
+                  onClick={() => toggleDay(day.day)}
+                  className={`p-3 rounded-lg border cursor-pointer ${
+                    completedDays.has(day.day)
+                      ? "bg-emerald-500/10 border-emerald-500/30"
+                      : "bg-black/40 border-white/10"
+                  }`}
+                >
+                  <div className="flex justify-between">
+                    <span>{day.date}</span>
+                    {completedDays.has(day.day) && <CheckCircle2 className="h-4 w-4 text-green-400" />}
+                  </div>
+
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {day.subjects.map((s) => `${s.name} (${s.hours}h)`).join(", ")}
+                  </div>
+                </div>
+              ))}
+
             </motion.div>
           )}
         </AnimatePresence>

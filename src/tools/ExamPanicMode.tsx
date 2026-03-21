@@ -4,7 +4,8 @@ import ToolLayout from "@/components/ToolLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, Flame, AlertTriangle, Zap, Clock } from "lucide-react";
+import { Plus, Trash2, Flame, AlertTriangle, Zap, Clock, RotateCcw } from "lucide-react";
+import { toast } from "sonner";
 
 interface ChapterPlan {
   name: string;
@@ -25,160 +26,196 @@ const ExamPanicMode = () => {
 
   const generate = () => {
     const valid = chapters.filter((c) => c.name.trim());
-    if (!valid.length || !examDate) return;
+    if (!valid.length) {
+      toast.error("Add at least one chapter");
+      return;
+    }
+    if (!examDate) {
+      toast.error("Select exam date");
+      return;
+    }
 
     const today = new Date();
     const exam = new Date(examDate);
-    const days = Math.max(1, Math.ceil((exam.getTime() - today.getTime()) / 86400000));
+
+    const diff = Math.ceil((exam.setHours(0,0,0,0) - today.setHours(0,0,0,0)) / 86400000);
+    const days = Math.max(1, diff);
+
     setDaysLeft(days);
+
     const hours = parseFloat(dailyHours) || 8;
 
-    // Sort by difficulty (hard first)
     const sorted = [...valid].sort((a, b) => {
       const order = { hard: 0, medium: 1, easy: 2 };
-      return (order[a.difficulty as keyof typeof order] ?? 1) - (order[b.difficulty as keyof typeof order] ?? 1);
+      return order[a.difficulty as keyof typeof order] - order[b.difficulty as keyof typeof order];
     });
 
     const result: ChapterPlan[] = [];
     let currentDay = 1;
-    let hoursUsed = 0;
+    let used = 0;
 
     sorted.forEach((ch, i) => {
       const needed = ch.difficulty === "hard" ? 3 : ch.difficulty === "medium" ? 2 : 1.5;
-      if (hoursUsed + needed > hours) {
-        currentDay++;
-        hoursUsed = 0;
-      }
-      const urgency: ChapterPlan["urgency"] =
-        i < sorted.length * 0.3 ? "critical" : i < sorted.length * 0.7 ? "high" : "medium";
 
-      result.push({ name: ch.name, day: Math.min(currentDay, days), hours: needed, urgency });
-      hoursUsed += needed;
+      if (used + needed > hours) {
+        currentDay++;
+        used = 0;
+      }
+
+      result.push({
+        name: ch.name,
+        day: Math.min(currentDay, days),
+        hours: needed,
+        urgency:
+          i < sorted.length * 0.3
+            ? "critical"
+            : i < sorted.length * 0.7
+            ? "high"
+            : "medium",
+      });
+
+      used += needed;
     });
 
     setPlan(result);
   };
 
+  const reset = () => {
+    setPlan(null);
+    setChapters([{ name: "", difficulty: "medium" }]);
+    setExamDate("");
+  };
+
   const urgencyColor = {
-    critical: "text-rose-400 bg-rose-500/10 border-rose-500/25",
-    high: "text-amber-400 bg-amber-500/10 border-amber-500/25",
-    medium: "text-blue-400 bg-blue-500/10 border-blue-500/25",
+    critical: "border-red-500/40 text-red-400",
+    high: "border-yellow-500/40 text-yellow-400",
+    medium: "border-blue-500/40 text-blue-400",
   };
 
   const urgencyIcon = {
-    critical: <AlertTriangle className="h-3.5 w-3.5" />,
-    high: <Zap className="h-3.5 w-3.5" />,
-    medium: <Clock className="h-3.5 w-3.5" />,
+    critical: <AlertTriangle className="h-4 w-4" />,
+    high: <Zap className="h-4 w-4" />,
+    medium: <Clock className="h-4 w-4" />,
   };
 
   return (
     <ToolLayout title="Exam Panic Mode">
+
+      {/* 🛞 WHEEL */}
+      <motion.img
+        src="https://cdn-icons-png.flaticon.com/512/743/743131.png"
+        className="absolute top-4 right-6 w-14 opacity-20"
+        animate={{ rotate: 360 }}
+        transition={{ repeat: Infinity, duration: 12 }}
+      />
+
+      {/* 🏎️ NEW CAR */}
+      <motion.img
+        src="https://pngimg.com/uploads/sports_car/sports_car_PNG10638.png"
+        className="absolute bottom-2 right-10 w-56 opacity-25 hidden sm:block"
+        animate={{ y: [0, -10, 0] }}
+        transition={{ repeat: Infinity, duration: 5 }}
+      />
+
       <div className="space-y-6">
-        {/* Input */}
+
+        {/* INPUT */}
         <div className="space-y-4">
-          <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground uppercase tracking-wider">
-            <Flame className="h-4 w-4 text-rose-400" /> Emergency Setup
+
+          <div className="flex items-center gap-2 text-sm text-red-400 font-semibold">
+            <Flame className="h-4 w-4" /> Emergency Setup
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label className="text-xs text-muted-foreground mb-1.5 block">Exam Date</Label>
-              <Input type="date" value={examDate} onChange={(e) => setExamDate(e.target.value)} />
-            </div>
-            <div>
-              <Label className="text-xs text-muted-foreground mb-1.5 block">Daily Hours Available</Label>
-              <Input type="number" min="1" max="16" value={dailyHours} onChange={(e) => setDailyHours(e.target.value)} />
-            </div>
+            <Input type="date" value={examDate} onChange={(e) => setExamDate(e.target.value)} className="bg-black/40 border-white/10 text-white" />
+            <Input type="number" value={dailyHours} onChange={(e) => setDailyHours(e.target.value)} className="bg-black/40 border-white/10 text-white" />
           </div>
 
-          <div>
-            <Label className="text-xs text-muted-foreground mb-1.5 block">Chapters Remaining</Label>
-            <div className="space-y-2">
-              {chapters.map((ch, i) => (
-                <div key={i} className="flex gap-2 items-center">
-                  <Input
-                    placeholder={`Chapter ${i + 1}`}
-                    value={ch.name}
-                    onChange={(e) => {
-                      const u = [...chapters];
-                      u[i].name = e.target.value;
-                      setChapters(u);
-                    }}
-                    className="flex-1"
-                  />
-                  <select
-                    value={ch.difficulty}
-                    onChange={(e) => {
-                      const u = [...chapters];
-                      u[i].difficulty = e.target.value;
-                      setChapters(u);
-                    }}
-                    className="h-10 rounded-md border border-input bg-background px-3 text-sm"
-                  >
-                    <option value="hard">Hard</option>
-                    <option value="medium">Medium</option>
-                    <option value="easy">Easy</option>
-                  </select>
-                  {chapters.length > 1 && (
-                    <Button variant="ghost" size="icon" onClick={() => removeChapter(i)}>
-                      <Trash2 className="h-4 w-4 text-muted-foreground" />
-                    </Button>
-                  )}
-                </div>
-              ))}
-              <Button variant="outline" size="sm" onClick={addChapter} className="w-full">
-                <Plus className="mr-2 h-4 w-4" /> Add Chapter
-              </Button>
-            </div>
-          </div>
+          {/* CHAPTERS */}
+          {chapters.map((ch, i) => (
+            <div key={i} className="flex gap-2">
+              <Input
+                placeholder="Chapter name"
+                value={ch.name}
+                onChange={(e) => {
+                  const u = [...chapters];
+                  u[i].name = e.target.value;
+                  setChapters(u);
+                }}
+                className="bg-black/40 border-white/10 text-white"
+              />
 
-          <Button onClick={generate} className="w-full bg-rose-600 hover:bg-rose-700" disabled={!chapters.some((c) => c.name.trim()) || !examDate}>
-            <Flame className="mr-2 h-4 w-4" /> Generate Emergency Plan
+              <select
+                value={ch.difficulty}
+                onChange={(e) => {
+                  const u = [...chapters];
+                  u[i].difficulty = e.target.value;
+                  setChapters(u);
+                }}
+                className="bg-black/40 border border-white/10 text-white px-2 rounded-md"
+              >
+                <option value="hard">Hard</option>
+                <option value="medium">Medium</option>
+                <option value="easy">Easy</option>
+              </select>
+
+              {chapters.length > 1 && (
+                <Button variant="ghost" onClick={() => removeChapter(i)}>
+                  <Trash2 className="h-4 w-4 text-gray-400" />
+                </Button>
+              )}
+            </div>
+          ))}
+
+          <Button onClick={addChapter} variant="outline" className="w-full border-white/10">
+            <Plus className="mr-2 h-4 w-4" /> Add Chapter
+          </Button>
+
+          <Button onClick={generate} className="w-full btn-f1">
+            <Flame className="mr-2 h-4 w-4" /> Generate Plan
+          </Button>
+
+          <Button onClick={reset} variant="ghost" className="w-full">
+            <RotateCcw className="mr-2 h-4 w-4" /> Reset
           </Button>
         </div>
 
-        {/* Results */}
+        {/* RESULTS */}
         <AnimatePresence>
           {plan && (
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              className="space-y-4"
-            >
-              {/* Stats */}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-3">
+
               <div className="grid grid-cols-3 gap-3">
-                {[
-                  { label: "Days Left", value: daysLeft, color: daysLeft <= 3 ? "text-rose-400" : "text-foreground" },
-                  { label: "Chapters", value: plan.length, color: "text-foreground" },
-                  { label: "Critical", value: plan.filter((p) => p.urgency === "critical").length, color: "text-rose-400" },
-                ].map((stat) => (
-                  <div key={stat.label} className="text-center p-3 rounded-lg bg-secondary/50 border border-border">
-                    <p className={`font-display font-bold text-2xl ${stat.color}`}>{stat.value}</p>
-                    <p className="text-[11px] text-muted-foreground">{stat.label}</p>
-                  </div>
-                ))}
+                <div className="p-3 bg-black/40 rounded-lg text-center">
+                  <p className="text-2xl text-red-400 font-bold">{daysLeft}</p>
+                  <p className="text-xs text-gray-400">Days</p>
+                </div>
+                <div className="p-3 bg-black/40 rounded-lg text-center">
+                  <p className="text-2xl font-bold">{plan.length}</p>
+                  <p className="text-xs text-gray-400">Chapters</p>
+                </div>
+                <div className="p-3 bg-black/40 rounded-lg text-center">
+                  <p className="text-2xl text-red-400 font-bold">
+                    {plan.filter((p) => p.urgency === "critical").length}
+                  </p>
+                  <p className="text-xs text-gray-400">Critical</p>
+                </div>
               </div>
 
-              {/* Chapter List */}
-              <div className="space-y-2">
-                {plan.map((ch, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.04 }}
-                    className={`flex items-center gap-3 p-3.5 rounded-lg border ${urgencyColor[ch.urgency]}`}
-                  >
-                    <div className="shrink-0">{urgencyIcon[ch.urgency]}</div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-foreground truncate">{ch.name}</p>
-                      <p className="text-xs text-muted-foreground">Day {ch.day} · {ch.hours}h estimated</p>
-                    </div>
-                    <span className="text-[10px] font-medium uppercase tracking-wider opacity-70">{ch.urgency}</span>
-                  </motion.div>
-                ))}
-              </div>
+              {plan.map((ch, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  className={`p-3 rounded-lg border ${urgencyColor[ch.urgency]} flex justify-between`}
+                >
+                  <span>{ch.name}</span>
+                  <span className="text-xs">
+                    Day {ch.day} · {ch.hours}h
+                  </span>
+                </motion.div>
+              ))}
+
             </motion.div>
           )}
         </AnimatePresence>

@@ -1,32 +1,38 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap');
+/* ================= GOOGLE FONTS ================= */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Inter:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ================= ROOT VARIABLES ================= */
 @layer base {
   :root {
-    --background: 230 25% 7%;
-    --background-alt: 230 25% 10%;
-    --foreground: 210 40% 96%;
+    /* 🌌 BACKGROUND (F1 DARK) */
+    --background: 230 30% 5%;
+    --background-alt: 230 30% 8%;
+    --foreground: 210 40% 98%;
     --foreground-muted: 215 20% 65%;
 
-    --card: 230 25% 11%;
+    /* 🧊 CARDS */
+    --card: 230 25% 10%;
     --card-foreground: 210 40% 96%;
 
-    --popover: 230 25% 11%;
+    --popover: 230 25% 10%;
     --popover-foreground: 210 40% 96%;
 
-    --primary: 262 83% 58%;
+    /* 🔴 PRIMARY (F1 RED) */
+    --primary: 0 85% 55%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 230 25% 16%;
+    /* ⚙️ SECONDARY */
+    --secondary: 230 20% 14%;
     --secondary-foreground: 210 40% 96%;
 
-    --muted: 230 20% 18%;
+    --muted: 230 20% 16%;
     --muted-foreground: 215 20% 55%;
 
-    --accent: 230 25% 16%;
+    --accent: 230 20% 16%;
     --accent-foreground: 210 40% 96%;
 
     --destructive: 0 72% 51%;
@@ -34,77 +40,139 @@
 
     --border: 230 20% 18%;
     --input: 230 20% 18%;
-    --ring: 262 83% 58%;
+    --ring: 0 85% 55%;
 
     --radius: 0.75rem;
 
-    --color-cyan: 185 95% 55%;
-    --color-pink: 330 90% 60%;
-    --color-amber: 38 95% 60%;
-    --color-emerald: 160 84% 45%;
-    --color-rose: 350 90% 60%;
+    /* 🔥 NEON COLORS */
+    --color-red: 0 85% 55%;
+    --color-cyan: 190 95% 55%;
     --color-blue: 217 91% 60%;
+    --color-purple: 270 80% 60%;
 
-    --glass-bg: rgba(15, 18, 35, 0.7);
+    /* 🧊 GLASS */
+    --glass-bg: rgba(10, 12, 25, 0.65);
     --glass-border: rgba(255, 255, 255, 0.08);
-    --shadow-soft: 0 10px 40px -10px rgba(139, 92, 246, 0.15);
-    --shadow-card: 0 0 0 1px rgba(255, 255, 255, 0.05), 0 2px 20px rgba(0, 0, 0, 0.3);
-    --shadow-card-hover: 0 0 0 1px rgba(139, 92, 246, 0.3), 0 20px 50px -12px rgba(139, 92, 246, 0.25);
 
-    --sidebar-background: 230 25% 10%;
-    --sidebar-foreground: 210 40% 96%;
-    --sidebar-primary: 262 83% 58%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 230 25% 16%;
-    --sidebar-accent-foreground: 210 40% 96%;
-    --sidebar-border: 230 20% 18%;
-    --sidebar-ring: 262 83% 58%;
+    /* 🌟 SHADOWS */
+    --shadow-neon-red: 0 0 25px hsl(var(--color-red) / 0.4);
+    --shadow-neon-cyan: 0 0 25px hsl(var(--color-cyan) / 0.35);
+
+    --shadow-card: 0 0 0 1px rgba(255,255,255,0.05),
+                   0 10px 30px rgba(0,0,0,0.5);
+
+    --shadow-card-hover: 0 0 0 1px hsl(var(--color-red) / 0.3),
+                         0 20px 60px rgba(0,0,0,0.7),
+                         0 0 30px hsl(var(--color-red) / 0.2);
   }
 }
 
+/* ================= BASE STYLES ================= */
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
-    @apply bg-background text-foreground font-body antialiased;
+    @apply text-foreground antialiased;
+    font-family: 'Inter', sans-serif;
+
+    /* 🌌 F1 BACKGROUND */
+    background: radial-gradient(circle at 20% 20%, #0b0f1a, #020617);
   }
+
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display;
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 0.5px;
   }
 }
 
+/* ================= UTILITIES ================= */
 @layer utilities {
+
+  /* 🧊 GLASS */
   .glass {
     background: var(--glass-bg);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--glass-border);
   }
+
+  .glass-strong {
+    background: rgba(10, 12, 25, 0.75);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+
+  /* 🌟 CARD SHADOW */
   .card-shadow {
     box-shadow: var(--shadow-card);
   }
+
   .card-shadow-hover {
     box-shadow: var(--shadow-card-hover);
   }
+
+  /* 🔥 TEXT GRADIENT (F1 STYLE) */
+  .text-gradient-f1 {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      90deg,
+      hsl(var(--color-red)),
+      hsl(var(--color-purple)),
+      hsl(var(--color-cyan))
+    );
+  }
+
+  /* 🌈 ALT TEXT */
   .text-gradient {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--color-cyan)), hsl(var(--color-pink)));
+    background-image: linear-gradient(
+      135deg,
+      hsl(var(--primary)),
+      hsl(var(--color-cyan))
+    );
   }
-  .text-gradient-warm {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(var(--color-amber)), hsl(var(--color-rose)), hsl(var(--color-pink)));
+
+  /* 🔴 RED GLOW */
+  .glow-red {
+    box-shadow: var(--shadow-neon-red);
   }
-  .bg-gradient-radial {
-    background: radial-gradient(ellipse at 50% 0%, hsl(var(--primary) / 0.15) 0%, transparent 60%);
-  }
-  .glow-primary {
-    box-shadow: 0 0 20px hsl(var(--primary) / 0.4), 0 0 60px hsl(var(--primary) / 0.1);
-  }
+
+  /* 🔵 CYAN GLOW */
   .glow-cyan {
-    box-shadow: 0 0 20px hsl(var(--color-cyan) / 0.3);
+    box-shadow: var(--shadow-neon-cyan);
   }
-  .border-glow {
-    border: 1px solid hsl(var(--primary) / 0.3);
+
+  /* 🏎️ NEON BORDER */
+  .border-neon {
+    border: 1px solid hsl(var(--color-red) / 0.4);
+  }
+
+  /* 🚀 HOVER EFFECT */
+  .hover-lift {
+    transition: all 0.3s ease;
+  }
+  .hover-lift:hover {
+    transform: translateY(-6px) scale(1.02);
+  }
+
+  /* 🌌 BACKGROUND GLOW */
+  .bg-f1-glow {
+    background:
+      radial-gradient(circle at 70% 30%, hsl(var(--color-red) / 0.25), transparent 50%),
+      radial-gradient(circle at 30% 70%, hsl(var(--color-cyan) / 0.2), transparent 50%);
+  }
+
+  /* ⚡ BUTTON STYLE */
+  .btn-f1 {
+    background: linear-gradient(90deg, hsl(var(--color-red)), hsl(var(--color-cyan)));
+    color: white;
+    transition: all 0.3s ease;
+  }
+
+  .btn-f1:hover {
+    box-shadow: 0 0 25px hsl(var(--color-red) / 0.6);
+    transform: scale(1.05);
   }
 }
