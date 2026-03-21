@@ -20,7 +20,7 @@ const Footer = () => {
             >
               <GraduationCap className="h-6 w-6 text-red-500" />
               <span className="text-gradient-f1">
-                Student Tools Hub
+                ApexTools
               </span>
             </Link>
 
@@ -80,7 +80,7 @@ const Footer = () => {
             </div>
 
             <p className="text-sm text-muted-foreground mt-4">
-              contact@studenttoolshub.com
+              contact@apextools.com
             </p>
           </div>
         </div>
@@ -88,7 +88,7 @@ const Footer = () => {
         {/* BOTTOM */}
         <div className="border-t border-white/10 mt-12 pt-6 text-center text-xs text-muted-foreground">
           © {new Date().getFullYear()} 
-          <span className="text-gradient-f1 ml-1">Student Tools Hub</span>. 
+          <span className="text-gradient-f1 ml-1">ApexTools</span>. 
           All rights reserved.
         </div>
       </div>
