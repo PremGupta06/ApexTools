@@ -12,3 +12,5 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://apex-tools-zeta.vercel.app/sitemap.xml
