@@ -1,0 +1,27 @@
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://apex-tools-zeta.vercel.app/</loc>
+  </url>
+
+  <url>
+    <loc>https://apex-tools-zeta.vercel.app/blog</loc>
+  </url>
+
+  <url>
+    <loc>https://apex-tools-zeta.vercel.app/tools</loc>
+  </url>
+
+  <url>
+    <loc>https://apex-tools-zeta.vercel.app/about</loc>
+  </url>
+
+  <url>
+    <loc>https://apex-tools-zeta.vercel.app/blog/cgpa-guide</loc>
+  </url>
+
+  <url>
+    <loc>https://apex-tools-zeta.vercel.app/blog/pomodoro-guide</loc>
+  </url>
+
+</urlset>
