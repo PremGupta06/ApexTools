@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { GraduationCap, Github, Twitter, Mail } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Footer = () => {
   return (
@@ -9,7 +10,7 @@ const Footer = () => {
       <div className="absolute inset-0 bg-f1-glow opacity-40" />
 
       <div className="container mx-auto px-4 lg:px-10 py-16 relative z-10">
-        
+
         <div className="grid md:grid-cols-3 gap-10">
 
           {/* LOGO + DESC */}
@@ -57,7 +58,7 @@ const Footer = () => {
               <Link to="/terms" className="text-muted-foreground hover:text-purple-400 transition">
                 Terms of Service
               </Link>
-          
+
             </div>
           </div>
 
@@ -67,7 +68,7 @@ const Footer = () => {
               Connect
             </h4>
 
-            <div className="flex gap-4">
+            {/* <div className="flex gap-4">
               {[Github, Twitter, Mail].map((Icon, i) => (
                 <a
                   key={i}
@@ -77,19 +78,35 @@ const Footer = () => {
                   <Icon className="h-5 w-5" />
                 </a>
               ))}
-            </div>
+            </div> */}
 
             <p className="text-sm text-muted-foreground mt-4">
-              contact@apextools.com
+              Name - Prem Gupta <br>
+              </br>
+              Email - premgupta062006@gmail.com
             </p>
           </div>
         </div>
 
-        {/* BOTTOM */}
-        <div className="border-t border-white/10 mt-12 pt-6 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} 
-          <span className="text-gradient-f1 ml-1">ApexTools</span>. 
-          All rights reserved.
+        <div className="border-t border-white/10 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+          <div>
+            © {new Date().getFullYear()}
+            <span className="text-gradient-f1 ml-1">ApexTools</span>.
+            All rights reserved.
+          </div>
+          <Button
+            asChild
+            variant="outline"
+            className="text-xs bg-black/40 border border-white/10 hover:border-red-500/50 hover:bg-red-500/10 hover:text-white transition duration-300 rounded-xl"
+          >
+            <a
+              href="https://digitalheroesco.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Built for Digital Heroes
+            </a>
+          </Button>
         </div>
       </div>
     </footer>

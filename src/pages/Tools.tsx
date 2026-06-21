@@ -1,27 +1,17 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Sparkles } from "lucide-react";
+import { Search } from "lucide-react";
 import ToolCard from "@/components/ToolCard";
-import { toolsList, premiumToolsList } from "@/data/tools";
+import { toolsList } from "@/data/tools";
 import { Input } from "@/components/ui/input";
 
 const Tools = () => {
   const [search, setSearch] = useState("");
 
-  const allTools = [...toolsList, ...premiumToolsList];
-
-  const filtered = allTools.filter(
+  const filtered = toolsList.filter(
     (t) =>
       t.title.toLowerCase().includes(search.toLowerCase()) ||
       t.description.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const filteredBasic = filtered.filter((t) =>
-    toolsList.some((b) => b.to === t.to)
-  );
-
-  const filteredPremium = filtered.filter((t) =>
-    premiumToolsList.some((p) => p.to === t.to)
   );
 
   return (
@@ -65,50 +55,15 @@ const Tools = () => {
           </div>
         </motion.div>
 
-        {/* 🔴 PREMIUM TOOLS */}
-        {filteredPremium.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="mb-20"
-          >
-            <div className="flex items-center gap-3 mb-8">
-
-              <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-500/10 border border-red-500/30">
-                <Sparkles className="h-4 w-4 text-red-400" />
-                <span className="text-sm font-semibold text-red-400">
-                  Premium Tools
-                </span>
-              </div>
-
-              <div className="flex-1 h-px bg-gradient-to-r from-red-500/30 to-transparent" />
-            </div>
-
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredPremium.map((tool, i) => (
-                <ToolCard key={tool.title} {...tool} index={i} premium />
-              ))}
-            </div>
-          </motion.div>
-        )}
-
-        {/* ⚙️ BASIC TOOLS */}
-        {filteredBasic.length > 0 && (
+        {/* ⚙️ TOOLS GRID */}
+        {filtered.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <div className="flex items-center gap-3 mb-8">
-              <span className="text-sm font-medium text-gray-400">
-                Basic Tools
-              </span>
-              <div className="flex-1 h-px bg-white/10" />
-            </div>
-
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {filteredBasic.map((tool, i) => (
+              {filtered.map((tool, i) => (
                 <ToolCard key={tool.title} {...tool} index={i} />
               ))}
             </div>

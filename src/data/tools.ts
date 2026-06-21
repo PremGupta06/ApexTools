@@ -9,9 +9,11 @@ import {
   Binary,
   FileImage,
   FilePlus,
-  CalendarClock,
-  Flame,
-  BarChart3,
+  QrCode,
+  Palette,
+  CalendarDays,
+  Coins,
+  Receipt,
 } from "lucide-react";
 
 export const toolsList = [
@@ -25,10 +27,9 @@ export const toolsList = [
   { icon: Binary, title: "Base64 Encoder / Decoder", description: "Encode or decode Base64 strings.", to: "/tool/base64" },
   { icon: FileImage, title: "Image to PDF Converter", description: "Convert images to PDF documents.", to: "/tool/image-to-pdf" },
   { icon: FilePlus, title: "PDF Merger", description: "Merge multiple PDF files into one.", to: "/tool/pdf-merger" },
-];
-
-export const premiumToolsList = [
-  { icon: CalendarClock, title: "Smart Study Planner", description: "AI-powered daily study schedule with progress tracking and missed-day recovery.", to: "/tool/smart-study-planner" },
-  { icon: Flame, title: "Exam Panic Mode", description: "Emergency study plan with daily targets, priority chapters, and urgency indicators.", to: "/tool/exam-panic-mode" },
-  { icon: BarChart3, title: "Study Productivity Dashboard", description: "Track productivity score, weekly performance, streaks, and study analytics.", to: "/tool/study-dashboard" },
+  { icon: QrCode, title: "QR Code Generator", description: "Generate and download QR codes instantly.", to: "/tool/qr-generator" },
+  { icon: Palette, title: "Color Palette Generator", description: "Create beautiful color palettes for your projects.", to: "/tool/color-palette-generator" },
+  { icon: CalendarDays, title: "Age Calculator", description: "Calculate your age and details in years, months, and days.", to: "/tool/age-calculator" },
+  { icon: Coins, title: "EMI Calculator", description: "Estimate your monthly loan installments quickly.", to: "/tool/emi-calculator" },
+  { icon: Receipt, title: "GST Calculator", description: "Calculate inclusive and exclusive goods & services tax.", to: "/tool/gst-calculator" },
 ];

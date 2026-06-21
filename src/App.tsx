@@ -24,9 +24,11 @@ import JSONFormatter from "./tools/JSONFormatter";
 import Base64Tool from "./tools/Base64Tool";
 import ImageToPDF from "./tools/ImageToPDF";
 import PDFMerger from "./tools/PDFMerger";
-import SmartStudyPlanner from "./tools/SmartStudyPlanner";
-import ExamPanicMode from "./tools/ExamPanicMode";
-import StudyDashboard from "./tools/StudyDashboard";
+import QRCodeGenerator from "./tools/QRCodeGenerator";
+import ColorPaletteGenerator from "./tools/ColorPaletteGenerator";
+import AgeCalculator from "./tools/AgeCalculator";
+import EMICalculator from "./tools/EMICalculator";
+import GSTCalculator from "./tools/GSTCalculator";
 
 
 const queryClient = new QueryClient();
@@ -52,9 +54,16 @@ const App = () => (
           <Route path="/tool/base64" element={<Base64Tool />} />
           <Route path="/tool/image-to-pdf" element={<ImageToPDF />} />
           <Route path="/tool/pdf-merger" element={<PDFMerger />} />
-          <Route path="/tool/smart-study-planner" element={<SmartStudyPlanner />} />
-          <Route path="/tool/exam-panic-mode" element={<ExamPanicMode />} />
-          <Route path="/tool/study-dashboard" element={<StudyDashboard />} />
+          <Route path="/tool/qr-generator" element={<QRCodeGenerator />} />
+          <Route path="/tool/color-palette-generator" element={<ColorPaletteGenerator />} />
+          <Route path="/tool/age-calculator" element={<AgeCalculator />} />
+          <Route path="/tool/emi-calculator" element={<EMICalculator />} />
+          <Route path="/tool/gst-calculator" element={<GSTCalculator />} />
+          <Route path="/qr-generator" element={<QRCodeGenerator />} />
+          <Route path="/color-palette-generator" element={<ColorPaletteGenerator />} />
+          <Route path="/age-calculator" element={<AgeCalculator />} />
+          <Route path="/emi-calculator" element={<EMICalculator />} />
+          <Route path="/gst-calculator" element={<GSTCalculator />} />
           <Route path="*" element={<NotFound />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsPage />} />
